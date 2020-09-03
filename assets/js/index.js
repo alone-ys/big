@@ -79,7 +79,7 @@ $(function () {
                 // 跳转到后台主页 
                 // location.href=  跳转页面
                 // location.assign("index.html")
-                location.href="index.html"
+                location.href = "index.html"
             }
 
         })
