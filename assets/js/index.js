@@ -40,7 +40,7 @@ $(function () {
         }
         $.ajax({
             method: "post",
-            url: "http://ajax.frontend.itheima.net/api/reguser",
+            url: "/api/reguser",
             data: data,
             success: function (res) {
                 console.log(res)
@@ -63,7 +63,7 @@ $(function () {
         e.preventDefault(e)
         $.ajax({
             method: "post",
-            url: "http://ajax.frontend.itheima.net/api/login",
+            url: "/api/login",
             // 快速获取表单的值，返回一个字符串
             data: $(this).serialize(),
             success: function (res) {
