@@ -1,90 +1,57 @@
-$(function () {
-    // 点击“去注册账号”的链接
-    $('#link_reg').on('click', function () {
-        $('.login-box').hide()
-        $('.reg-box').show()
-    })
+// 调用 获取用户的基本信息
+getUserInfo()
 
-    // 点击“去登录”的链接
-    $('#link_login').on('click', function () {
-        $('.login-box').show()
-        $('.reg-box').hide()
-    })
-
-    // 引入layui.js 自动注入对象自动生成form属性 
-    var form = layui.form
-    form.verify({
-        // 自定义了一个叫做 pwd 校验规则
-        // 以数组的形式 参数1正则匹配  参数2，匹配不符时的提示文字
-        pwd: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'],
-        // 校验两次密码是否一致的规则
-        repwd: function (value) {
-            // 属性选择器
-            var pas = $(".reg-box [name=password] ").val()
-            if (pas !== value) {
-                return "两次密码不一致"
-            }
-        },
-    })
-
-
-    // layui 里面的提交失败的样式
-    var layer = layui.layer
-    // 给注册页面一个表单提交事件
-    $("#form_reg").on("submit", function (e) {
-        e.preventDefault()
-        // 获取表单数据
-        var data = {
-            username: $("#form_reg [name=username]").val(),
-            password: $("#form_reg [name=password]").val()
-        }
-        $.ajax({
-            method: "post",
-            url: "/api/reguser",
-            data: data,
-            success: function (res) {
-                console.log(res)
-                if (res.status != 0) {
-                    // 
-                    return layer.msg(res.message)
-                }
-                console.log("")
-                layer.msg("注册成功")
-                // 注册成功以后默认自动跳转到登录页面
-                $("#link_login").click()
-            }
-        })
-
-    })
-
-
-    // 给登录页面一个submit监听事件
-    $("#form_login").on("submit", function (e) {
-        e.preventDefault(e)
-        $.ajax({
-            method: "post",
-            url: "/api/login",
-            // 快速获取表单的值，返回一个字符串
-            data: $(this).serialize(),
-            success: function (res) {
-                console.log("请先注册")
-                console.log(res)
-                if (res.status !== 0) {
-                    // 
-                    return layer.msg(res.message)
-                }
-                layer.msg("注册成功")
-                // 将登录成功的token 字符串，保存到localStorage本地
-                localStorage.setItem("token", res.token)
-                // 跳转到后台主页 
-                // location.href=  跳转页面
-                // location.assign("index.html")
-                location.href = "index.html"
-            }
-
-        })
-
-    })
-
-
+var layer = layui.layer
+// 点击退出按钮，实现退出功能
+$("#btnBack").on("click", function () {
+    // layui 提供的提示信息
+    layer.confirm('确定退出登录?', { icon: 3, title: '提示' }, function (index) {
+        //do something
+        // 1.清空本地存储tonken
+        localStorage.removeItem("token")
+        // 2.重新跳转登录页面
+        location.href = "login.html"
+        // 关闭confirm 询问框 
+        layer.close(index);
+    });
 })
+
+// 获取用户的基本信息
+function getUserInfo() {
+    $.ajax({
+        method: "get",
+        url: "/my/userinfo",
+        // 响应头
+        // headers: {
+        //     //获取之前在本地存储的token值 
+        //     Authorization: localStorage.getItem("token") || ""
+        // },
+        success: function (res) {
+            console.log(res)
+            if (res.status !== 0) {
+                return layui.layer.msg("获取用户信息失败！")
+            }
+            // 渲染用户的头像和名字
+            getpic(res.data)
+        },
+
+    })
+}
+
+// 渲染用户头像
+function getpic(user) {
+    // 判断如果用户有nickname 就设置nickname 值，没有就设置username值
+    var uname = user.nickname || user.username
+    $("#welcome").html("欢迎&nbsp;&nbsp;" + uname)
+    // 判断用户是否有user_pic图片头像 有就用这个，没有就用文字头像
+    if (user.user_pic !== null) {
+        $(".layui-nav-img").attr("src", user.user_pic).show()
+        // 文件头像隐藏
+        $(".text-avatar").hide()
+    } else {
+        $(".text-avatar").html(uname[0].toUpperCase()).show()
+        $(".layui-nav-img").hide()
+
+    }
+
+}

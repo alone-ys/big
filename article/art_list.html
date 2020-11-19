@@ -15,7 +15,9 @@
         <!-- 筛选区域 -->
         <form class="layui-form" id="form-search">
           <div class="layui-form-item layui-inline">
-            <select name="cate_id"></select>
+            <select name="cate_id">
+                
+            </select>
           </div>
           <div class="layui-form-item layui-inline">
             <select name="state">
@@ -31,6 +33,7 @@
         <!-- 列表区域 -->
         <table class="layui-table">
           <colgroup>
+            <!-- 让第一个表格宽度自定义 -->
             <col />
             <col width="150" />
             <col width="180" />
@@ -49,7 +52,9 @@
           <tbody></tbody>
         </table>
         <!-- 分页区域 -->
-        <div id="pageBox"></div>
+        <div id="pageBox">
+
+        </div>
       </div>
     </div>
 
@@ -59,10 +64,11 @@
       <tr>
         <td>{{$value.title}}</td>
         <td>{{$value.cate_name}}</td>
-        <td>{{$value.pub_date|dataFormat}}</td>
+        <td>{{$value.pub_date | dataTime}}</td>
         <td>{{$value.state}}</td>
         <td>
-          <button type="button" class="layui-btn layui-btn-xs">编辑</button>
+          <!-- 编辑功能 添加类名 -->
+          <button type="button" class="layui-btn layui-btn-xs btn-edit">编辑</button>
           <button type="button" class="layui-btn layui-btn-danger layui-btn-xs btn-delete" data-id="{{$value.Id}}">删除</button>
         </td>
       </tr>
@@ -80,7 +86,8 @@
     <!-- 导入第三方的 JS 插件 -->
     <script src="/assets/lib/layui/layui.all.js"></script>
     <script src="/assets/lib/jquery.js"></script>
-    <script src="/assets/js/baseAPI.js"></script>
+    <script src="/assets/js/api.js"></script>
+
     <script src="/assets/lib/template-web.js"></script>
     <!-- 导入自己的 JS 脚本 -->
     <script src="/assets/js/article/art_list.js"></script>
